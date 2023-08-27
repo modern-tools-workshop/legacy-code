@@ -15,9 +15,9 @@ FUNCTION realdistance,lat1,lon1,lat2,lon2
 return, temp;
 END
 
-PRO areasearch, lat_viirs, _viirs, rad_viirs, targetlat, targetlon
+PRO areasearch, lat_viirs, lon_viirs, rad_viirs, targetlat, targetlon
 
-    ; Searching in quarter degree
+    ; Searching in one degree
     x=where(abs(lat-targetlat) LE 1.0)
 
     ; calculate the distance between the remaining points
@@ -31,8 +31,8 @@ PRO areasearch, lat_viirs, _viirs, rad_viirs, targetlat, targetlon
     x1=x(xind);
 
     ; Find the max radiance value within the closest points
-    mx=max(rad(x1),location); 
-    ind= ARRAY_INDICES(rad, x1(location))
+    mx=max(rad_viirs(x1),location); 
+    ind= ARRAY_INDICES(rad_viirs, x1(location))
     ; Use the location of the maximum pixel to find all neighboring points
     I0=ind(0);
     J0=ind(1);
@@ -52,21 +52,20 @@ PRO areasearch, lat_viirs, _viirs, rad_viirs, targetlat, targetlon
              and (j1 ge low) and (j1 lt width) and (j2 ge low) and (j2 lt width)) then begin
 
         ;compute the total radiance within a rectangle around the brightest pixel
-        radarea=total(rad(i1:i2,j1:j2))
+        radarea=total(rad_viirs(i1:i2,j1:j2))
 
         ;compute the min radiance within a rectangle around the brightest pixel
-        minrad=Min(rad(i1:i2,j1:j2)) 
+        minrad=Min(rad_viirs(i1:i2,j1:j2)) 
         
         ;compute the min radiance within a rectangle around the brightest pixel
-        targetDist=realdistance(lat(I0,J0),lon(I0,J0),targetlat,targetlon);
+        targetDist=realdistance(lat_viirs(I0,J0),lon_viirs(I0,J0),targetlat,targetlon);
 
-		print,"Found."
 		print, minrad, radarea, targetDist;
 
     endif
 END
 
-PRO mean
+PRO main
     targetlat=57.0;
     targetlon=-78.0;
 
