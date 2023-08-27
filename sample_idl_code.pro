@@ -19,10 +19,6 @@ PRO areasearch, lat_viirs, _viirs, rad_viirs, targetlat, targetlon
 
     ; Searching in quarter degree
     x=where(abs(lat-targetlat) LE 1.0)
-    if x(0) eq -1 then begin
-            print, 'Not found.'
-            continue 
-    endif
 
     ; calculate the distance between the remaining points
     d=realdistance(lat_viirs(x),lon_viirs(x),targetlat,targetlon);
@@ -30,10 +26,6 @@ PRO areasearch, lat_viirs, _viirs, rad_viirs, targetlat, targetlon
     ; check if any of the remaining points are within 1km of the 
     ; given point
     xind=where(d LE 1.0); 
-    if (xind(0) eq -1) then begin
-        print, 'Not found'
-        continue 
-    endif
 
     ; The indices of all matches
     x1=x(xind);
